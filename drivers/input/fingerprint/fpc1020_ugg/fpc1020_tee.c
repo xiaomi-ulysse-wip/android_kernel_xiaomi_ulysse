@@ -56,6 +56,10 @@
 static struct proc_dir_entry *proc_entry;
 extern int fpsensor;
 
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+static struct kernfs_node *soc_symlink = NULL;
+#endif
+
 static const char * const pctl_names[] = {
 	"fpc1020_reset_reset",
 	"fpc1020_reset_active",
@@ -461,6 +465,11 @@ static int fpc1020_probe(struct platform_device *pdev)
 	int rc = 0;
 	size_t i;
 	int irqf;
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+	struct device *platform_dev;
+	struct kobject *soc_kobj;
+	struct kernfs_node *devices_node, *soc_node;
+#endif
 	struct device_node *np = dev->of_node;
 	struct fpc1020_data *fpc1020 = devm_kzalloc(dev, sizeof(*fpc1020),
 			GFP_KERNEL);
@@ -568,12 +577,37 @@ static int fpc1020_probe(struct platform_device *pdev)
 
 	 proc_entry = proc_create(PROC_NAME, 0777, NULL, &proc_file_fpc_ops);
 		if (NULL == proc_entry) {
-				printk(" gf3208 Couldn't create proc entry!");
+				printk(" fpc1020 Couldn't create proc entry!");
 				return -ENOMEM;
 			} else {
-				printk("gf3208 Create proc entry success!");
+				printk("fpc1020 Create proc entry success!");
 			}
 
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+	if(!dev->parent || !dev->parent->parent) {
+		dev_warn(dev, "Parent platform device not found");
+		goto exit;
+	}
+
+	platform_dev = dev->parent->parent;
+	if(strcmp(kobject_name(&platform_dev->kobj), "platform")) {
+		dev_warn(dev, "Parent platform device name not matched: %s", kobject_name(&platform_dev->kobj));
+		goto exit;
+	}
+
+	devices_node = platform_dev->kobj.sd->parent;
+	soc_kobj = &dev->parent->kobj;
+	soc_node = soc_kobj->sd;
+	kernfs_get(soc_node);
+
+	soc_symlink = kernfs_create_link(devices_node, kobject_name(soc_kobj), soc_node);
+	kernfs_put(soc_node);
+	if(IS_ERR(soc_symlink)) {
+		dev_warn(dev, "Unable to create soc symlink");
+	} else {
+        dev_warn(dev, "Create soc symlink success");
+    }
+#endif
 
 	dev_info(dev, "%s: ok\n", __func__);
 
@@ -584,6 +618,11 @@ exit:
 static int fpc1020_remove(struct platform_device *pdev)
 {
 	struct fpc1020_data *fpc1020 = platform_get_drvdata(pdev);
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+	if(!IS_ERR(soc_symlink)) {
+		kernfs_remove_by_name(soc_symlink->parent, soc_symlink->name);
+	}
+#endif
 
 	sysfs_remove_group(&pdev->dev.kobj, &attribute_group);
 	mutex_destroy(&fpc1020->lock);
