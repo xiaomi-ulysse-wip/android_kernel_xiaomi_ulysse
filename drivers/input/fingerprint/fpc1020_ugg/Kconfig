@@ -1,0 +1,4 @@
+config FINGERPRINT_FPC1020_UGG
+    tristate "fpc1020 fingerprint "
+    help
+        say y enable fpc

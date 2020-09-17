@@ -34,3 +34,6 @@ obj-$(CONFIG_RMI4_CORE)		+= rmi4/
 obj-$(CONFIG_INPUT_KEYRESET)	+= keyreset.o
 obj-$(CONFIG_INPUT_KEYCOMBO)	+= keycombo.o
 obj-$(CONFIG_SMI130)   += sensors/smi130/
+
+obj-y				+= fingerprint/fpc1020_ugg
+obj-y				+= fingerprint/gf3208_ugg
