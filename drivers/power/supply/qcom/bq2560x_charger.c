@@ -1176,7 +1176,7 @@ static int bq2560x_update_charging_profile(struct bq2560x *bq)
 		chg_ma = bq->jeita_ma;
 		chg_mv = bq->jeita_mv;
 	} else {
-		if (bq->usb_supply_type == POWER_SUPPLY_TYPE_USB_DCP || bq->usb_supply_type == POWER_SUPPLY_TYPE_USB_CDP) {
+		if (prop.intval == POWER_SUPPLY_TYPE_USB_DCP || prop.intval == POWER_SUPPLY_TYPE_USB_CDP) {
 			chg_ma = bq->platform_data->ta.ichg;
 			chg_mv = bq->platform_data->ta.vreg;
 			pr_err("DCP or CDP detected, set max current to : %d, max voltage to : %d\n", chg_ma,chg_mv);
