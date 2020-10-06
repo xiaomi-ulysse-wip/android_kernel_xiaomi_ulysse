@@ -1124,6 +1124,31 @@ static int bq2560x_charger_is_writeable(struct power_supply *psy,
 	return ret;
 }
 
+static int bq2560x_change_usb_supply_type(struct bq2560x *bq)
+{
+	int rc = 0;
+	union power_supply_propval prop = {0,};
+	rc = power_supply_get_property(bq->usb_psy, POWER_SUPPLY_PROP_TYPE, &prop);
+
+	if (rc < 0) {
+		pr_err("failed read prop type : %d", rc);
+	}
+
+	/* Skip if usb type already set to USB*/
+	if (prop.intval == POWER_SUPPLY_TYPE_USB && bq->usb_supply_type == POWER_SUPPLY_TYPE_UNKNOWN) {
+		return 0;
+	}
+
+	/* Detect and set usb power_supply desc type */
+	if (bq->usb_supply_type == POWER_SUPPLY_TYPE_USB_DCP || bq->usb_supply_type == POWER_SUPPLY_TYPE_USB_CDP) {
+		bq->usb_psy_desc.type = POWER_SUPPLY_TYPE_USB_DCP;
+	} else if (bq->usb_supply_type == POWER_SUPPLY_TYPE_USB || bq->usb_supply_type == POWER_SUPPLY_TYPE_UNKNOWN) {
+		bq->usb_psy_desc.type = POWER_SUPPLY_TYPE_USB;
+	}
+
+	return rc;
+}
+
 static int bq2560x_update_charging_profile(struct bq2560x *bq)
 {
 	int ret = 0;
@@ -1300,6 +1325,10 @@ static void bq2560x_external_power_changed(struct power_supply *psy)
 	if (ret < 0)
 		pr_info("could not set usb online state, ret=%d\n", ret);
 
+	ret = bq2560x_change_usb_supply_type(bq);
+	if (ret < 0) {
+		pr_info("could not change charge type, ret=%d\n", ret);
+	}
 }
 
 static int bq2560x_usb_psy_register(struct bq2560x *bq)
@@ -2148,6 +2177,8 @@ static irqreturn_t bq2560x_charger_interrupt(int irq, void *dev_id)
 		schedule_delayed_work(&bq->discharge_jeita_work,
 							calculate_jeita_poll_interval(bq) * HZ);
 
+		/* set type to USB when usb is removed */
+		bq->usb_psy_desc.type = POWER_SUPPLY_TYPE_USB;
 		pr_err("usb removed, set usb present = %d\n", bq->usb_present);
 	} else if (bq->power_good && !bq->usb_present) {
 		bq->usb_present = true;
