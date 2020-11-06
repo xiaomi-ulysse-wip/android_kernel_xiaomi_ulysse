@@ -15,4 +15,3 @@ obj-$(CONFIG_SMB1390_CHARGE_PUMP)	+= smb1390-charger.o pmic-voter.o
 obj-$(CONFIG_QPNP_VM_BMS) += qpnp-vm-bms.o batterydata-lib.o batterydata-interface.o
 obj-$(CONFIG_QPNP_LINEAR_CHARGER)	+= qpnp-linear-charger.o
 obj-$(CONFIG_BQ27426_FG)	+= bq27426_fg.o
-obj-$(CONFIG_BQ2560X_CHARGER)	+= bq2560x_charger.o
