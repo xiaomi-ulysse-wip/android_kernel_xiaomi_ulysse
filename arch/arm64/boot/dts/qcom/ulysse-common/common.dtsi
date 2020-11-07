@@ -63,6 +63,10 @@
 	extcon = <&bq2560x_otg_supply>;
 };
 
+&bq2560x_otg_supply {
+	dpdm-supply = <&usb_otg>;
+};
+
 &apps_iommu {
 	qcom,no-aarch64;
 };
