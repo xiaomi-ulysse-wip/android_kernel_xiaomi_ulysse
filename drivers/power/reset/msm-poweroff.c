@@ -64,9 +64,9 @@ static bool force_warm_reboot;
  * There is no API from TZ to re-enable the registers.
  * So the SDI cannot be re-enabled when it already by-passed.
  */
-static int download_mode = 1;
+int download_mode = 1;
 #else
-static const int download_mode;
+const int download_mode;
 #endif
 
 #ifdef CONFIG_QCOM_DLOAD_MODE
@@ -76,7 +76,7 @@ static const int download_mode;
 #define KASLR_OFFSET_PROP "qcom,msm-imem-kaslr_offset"
 #endif
 
-static int in_panic;
+int in_panic;
 static int dload_type = SCM_DLOAD_FULLDUMP;
 static void *dload_mode_addr;
 static bool dload_mode_enabled;
