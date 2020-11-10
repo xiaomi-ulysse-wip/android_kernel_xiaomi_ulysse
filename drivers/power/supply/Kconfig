@@ -530,6 +530,15 @@ config BQ2560X_CHARGER
 	  This driver source code implemented
 	  all functions bq2560x charger.
 
+config BQ27426_FG
+	tristate "BQ27426 fuel gauge driver"
+	depends on I2C
+	help
+	  Say Y to include support
+	  for BQ27426 fuel gauge driver for batteries.
+	  This driver source code implemented
+	  all functions for BQ27426 fuel gauge.
+
 source "drivers/power/supply/qcom/Kconfig"
 
 endif # POWER_SUPPLY
