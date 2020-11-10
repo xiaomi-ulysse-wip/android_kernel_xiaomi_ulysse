@@ -41,6 +41,7 @@
 		ti,batt-id-vref-uv = <1800000>;
 		ti,batt-id-rpullup-kohm = <68>;
 		agassiz,force-select-profile-b;
+		monitored-battery = <&mtp_batterydata>;
 	};
 	bq2560x_otg_supply: bq2560x@6B {
 		compatible = "ti,bq25601-charger";
