@@ -220,11 +220,16 @@ static int __fg_read_byte(struct i2c_client *client, u8 reg, u8 *val)
 {
 	s32 ret;
 
+	pm_stay_awake(&client->dev);
+
 	ret = i2c_smbus_read_byte_data(client, reg);
 	if (ret < 0) {
 		pr_err("i2c read byte fail: can't read from reg 0x%02X\n", reg);
+		pm_relax(&client->dev);
 		return ret;
 	}
+
+	pm_relax(&client->dev);
 
 	*val = (u8)ret;
 	
@@ -235,12 +240,17 @@ static int __fg_write_byte(struct i2c_client *client, u8 reg, u8 val)
 {
 	s32 ret;
 
+	pm_stay_awake(&client->dev);
+
 	ret = i2c_smbus_write_byte_data(client, reg, val);
 	if (ret < 0) {
 		pr_err("i2c write byte fail: can't write 0x%02X to reg 0x%02X\n", 
 				val, reg);
+		pm_relax(&client->dev);
 		return ret;
 	}
+
+	pm_relax(&client->dev);
 
 	return 0;
 }
@@ -250,11 +260,16 @@ static int __fg_read_word(struct i2c_client *client, u8 reg, u16 *val)
 {
 	s32 ret;
 
+	pm_stay_awake(&client->dev);
+
 	ret = i2c_smbus_read_word_data(client, reg);
 	if (ret < 0) {
 		pr_err("i2c read word fail: can't read from reg 0x%02X\n", reg);
+		pm_relax(&client->dev);
 		return ret;
 	}
+
+	pm_relax(&client->dev);
 
 	*val = (u16)ret;
 	
@@ -266,12 +281,17 @@ static int __fg_write_word(struct i2c_client *client, u8 reg, u16 val)
 {
 	s32 ret;
 
+	pm_stay_awake(&client->dev);
+
 	ret = i2c_smbus_write_word_data(client, reg, val);
 	if (ret < 0) {
 		pr_err("i2c write word fail: can't write 0x%02X to reg 0x%02X\n", 
 				val, reg);
+		pm_relax(&client->dev);
 		return ret;
 	}
+
+	pm_relax(&client->dev);
 
 	return 0;
 }
@@ -281,6 +301,8 @@ static int __fg_read_block(struct i2c_client *client, u8 reg, u8 *buf, u8 len)
 	int ret;
 	struct i2c_msg msg[2];
 	int i;
+
+	pm_stay_awake(&client->dev);
 
 	msg[0].addr = client->addr;
 	msg[0].flags = 0;
@@ -294,6 +316,7 @@ static int __fg_read_block(struct i2c_client *client, u8 reg, u8 *buf, u8 len)
 
 	for (i = 0; i < 3; i++) {
 		ret = i2c_transfer(client->adapter, msg, ARRAY_SIZE(msg));
+		pm_relax(&client->dev);
 		if (ret >= 0)
 			return ret;
 		else
@@ -309,6 +332,8 @@ static int __fg_write_block(struct i2c_client *client, u8 reg, u8 *buf, u8 len)
 	u8 data[64];
 	int i = 0;
 
+	pm_stay_awake(&client->dev);
+
 	data[0] = reg;
 	memcpy(&data[1], buf, len);
 
@@ -319,6 +344,7 @@ static int __fg_write_block(struct i2c_client *client, u8 reg, u8 *buf, u8 len)
 
 	for (i = 0; i < 3; i++) {
 		ret = i2c_transfer(client->adapter, &msg, 1);
+		pm_relax(&client->dev);
 		if (ret >= 0)
 			return ret;
 		else
