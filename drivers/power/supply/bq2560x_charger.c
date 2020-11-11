@@ -243,13 +243,18 @@ static int __bq2560x_read_reg(struct bq2560x* bq, u8 reg, u8 *data)
 {
 	s32 ret;
 
+	pm_stay_awake(bq->dev);
+
 	ret = i2c_smbus_read_byte_data(bq->client, reg);
 	if (ret < 0) {
 		pr_err("i2c read fail: can't read from reg 0x%02X\n", reg);
+		pm_relax(bq->dev);
 		return ret;
 	}
 
 	*data = (u8)ret;
+
+	pm_relax(bq->dev);
 
 	return 0;
 }
@@ -258,12 +263,18 @@ static int __bq2560x_write_reg(struct bq2560x* bq, int reg, u8 val)
 {
 	s32 ret;
 
+	pm_stay_awake(bq->dev);
+
 	ret = i2c_smbus_write_byte_data(bq->client, reg, val);
 	if (ret < 0) {
 		pr_err("i2c write fail: can't write 0x%02X to reg 0x%02X: %d\n",
 				val, reg, ret);
+		pm_relax(bq->dev);
 		return ret;
 	}
+
+	pm_relax(bq->dev);
+
 	return 0;
 }
 
