@@ -40,3 +40,8 @@
 	/delete-node/ cam_sensor_rear_vdig;
 	/delete-node/ cam_sensor_rear_vdig_sleep;
 };
+
+&tlmm {
+	/delete-node/ cam_sensor_rear_vdig;
+	/delete-node/ cam_sensor_rear_vdig_sleep;
+};
