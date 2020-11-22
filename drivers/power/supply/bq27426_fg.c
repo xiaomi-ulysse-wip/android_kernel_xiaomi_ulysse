@@ -1276,6 +1276,7 @@ static int fg_set_property(struct power_supply *psy,
 		break;
 	case POWER_SUPPLY_PROP_CAPACITY:
 		bq->fake_soc = val->intval;
+		pr_err("power_supply_changed fg_set_property");
 		power_supply_changed(bq->fg_psy);
 		break;
 	case POWER_SUPPLY_PROP_UPDATE_NOW:
@@ -1640,6 +1641,7 @@ static irqreturn_t fg_irq_thread(int irq, void *dev_id)
 			bq->batt_soc, bq->batt_volt, bq->batt_curr, bq->batt_temp - 2730);
 	}
 
+	pr_err("power_supply_changed fg_irq_thread");
 	power_supply_changed(bq->fg_psy);
 	mutex_unlock(&bq->irq_complete);
 
@@ -1798,6 +1800,7 @@ static int bq_fg_resume(struct device *dev)
 		mutex_unlock(&bq->irq_complete);
 	}
 
+	pr_err("power_supply_changed bq_fg_resume");
 	power_supply_changed(bq->fg_psy);
 
 	return 0;
