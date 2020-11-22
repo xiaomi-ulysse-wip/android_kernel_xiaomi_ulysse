@@ -1091,8 +1091,10 @@ static int fg_get_batt_status(struct bq_fg_chip *bq)
 		return POWER_SUPPLY_STATUS_FULL;
 	else if (bq->batt_dsg)
 		return POWER_SUPPLY_STATUS_DISCHARGING;
-	else if (bq->batt_curr > 0)
+	else if (bq->batt_curr > 0) {
+		pr_err("bq27426 reported charging status, because bq->batt_curr > 0, batt_curr=%d",bq->batt_curr);
 		return POWER_SUPPLY_STATUS_CHARGING;
+	}
 	else
 		return POWER_SUPPLY_STATUS_NOT_CHARGING;
 
