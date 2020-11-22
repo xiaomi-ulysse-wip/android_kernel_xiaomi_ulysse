@@ -1023,6 +1023,7 @@ static int bq2560x_usb_set_property(struct power_supply *psy,
 		return -EINVAL;
 	}
 
+	pr_err("bq2560x_usb_set_property power_supply_changed");
 	power_supply_changed(psy);
 	return 0;
 }
@@ -1050,6 +1051,7 @@ static int bq2560x_charger_set_property(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_CHARGING_ENABLED:
 		bq2560x_charging_disable(bq, USER, !val->intval);
 
+		pr_err("bq2560x_charger_set_property power_supply_changed");
 		power_supply_changed(bq->batt_psy);
 		power_supply_changed(bq->usb_psy);
 		pr_info("POWER_SUPPLY_PROP_CHARGING_ENABLED: %s\n",
@@ -1279,6 +1281,8 @@ static int bq2560x_usb_psy_register(struct bq2560x *bq)
 		pr_err("Unable to register usb_psy\n");
 		return -EINVAL;
 	}
+
+	pr_err("bq2560x_usb_psy_register power_supply_changed");
 	power_supply_changed(bq->usb_psy);
 
 	return 0;
@@ -1842,9 +1846,11 @@ static void bq2560x_check_jeita(struct bq2560x *bq)
 	if ((last_cold != bq->batt_cold) || (last_warm != bq->batt_warm) ||
 		(last_cool != bq->batt_cool) || (last_cool_xiaomi != bq->batt_cool_xiaomi) ||(last_hot != bq->batt_hot)) {
 		bq2560x_update_charging_profile(bq);
+		pr_err("bq2560x_check_jeita 1 power_supply_changed");
 		power_supply_changed(bq->batt_psy);
 		power_supply_changed(bq->usb_psy);
 	} else if (bq->batt_hot || bq->batt_cold) {
+		pr_err("bq2560x_check_jeita 2 power_supply_changed");
 		power_supply_changed(bq->batt_psy);
 		power_supply_changed(bq->usb_psy);
 	}
@@ -1871,6 +1877,7 @@ static void bq2560x_check_batt_pres(struct bq2560x *bq)
 						bq->batt_present ? "disable" : "enable",
 						ret);
 			}
+			pr_err("bq2560x_check_batt_pres power_supply_changed");
 			power_supply_changed(bq->batt_psy);
 			power_supply_changed(bq->usb_psy);
 		}
@@ -1893,6 +1900,7 @@ static void bq2560x_check_batt_full(struct bq2560x *bq)
 						bq->batt_full ? "disable" : "enable",
 						ret);
 			}
+			pr_err("bq2560x_check_batt_full power_supply_changed");
 			power_supply_changed(bq->batt_psy);
 			power_supply_changed(bq->usb_psy);
 		}
@@ -2165,6 +2173,7 @@ static irqreturn_t bq2560x_charger_interrupt(int irq, void *dev_id)
 
 	mutex_unlock(&bq->irq_complete);
 
+	pr_err("bq2560x_charger_interrupt power_supply_changed");
 	power_supply_changed(bq->batt_psy);
 
 	return IRQ_HANDLED;
@@ -2672,6 +2681,7 @@ static int bq2560x_resume(struct device *dev)
 		mutex_unlock(&bq->irq_complete);
 	}
 
+	pr_err("bq2560x_resume power_supply_changed");
 	power_supply_changed(bq->batt_psy);
 
 
