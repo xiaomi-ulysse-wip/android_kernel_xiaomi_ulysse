@@ -971,6 +971,7 @@ static int fg_read_current(struct bq_fg_chip *bq, int *curr)
 		return ret;
 	}
 	*curr = (int)((s16)avg_curr);
+	pr_err("bq27426 read curr = %d",*curr);
 
 	return ret;
 }
