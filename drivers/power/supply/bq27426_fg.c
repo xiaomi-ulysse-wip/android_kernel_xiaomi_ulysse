@@ -1546,16 +1546,15 @@ EXPORT_SYMBOL_GPL(fg_enable_sleep);
 
 static void fg_dump_registers(struct bq_fg_chip *bq)
 {
-	int i;
-	int ret;
-	u16 val;
-
+/*
 	for (i = 0; i < ARRAY_SIZE(fg_dump_regs); i++) {
 		msleep(5);
 		ret = fg_read_word(bq, fg_dump_regs[i], &val);
 		if (!ret)
 			pr_err("Reg[%02X] = 0x%04X\n", fg_dump_regs[i], val);
 	}
+*/
+	return;
 }
 
 static irqreturn_t fg_irq_thread(int irq, void *dev_id)
