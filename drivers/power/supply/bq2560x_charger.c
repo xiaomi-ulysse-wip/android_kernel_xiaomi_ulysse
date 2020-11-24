@@ -1292,7 +1292,7 @@ static int bq2560x_psy_register(struct bq2560x *bq)
 
 	bq->batt_psy = devm_power_supply_register(bq->dev, &bq->batt_psy_d, &batt_psy_cfg);
 	if (IS_ERR(bq->batt_psy)) {
-		pr_err("failed to register batt_psy:%d\n", PTR_ERR(bq->batt_psy));
+		pr_err("failed to register batt_psy:%ld\n", PTR_ERR(bq->batt_psy));
 		ret = PTR_ERR(bq->batt_psy);
 		return ret;
 	}
