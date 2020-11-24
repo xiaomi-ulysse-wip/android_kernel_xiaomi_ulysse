@@ -42,7 +42,9 @@
 #include "bq2560x_reg.h"
 #include "bq2560x.h"
 
+/*
 #define THERMAL_CONFIG_FB 1
+*/
 #ifdef THERMAL_CONFIG_FB
 #include <linux/notifier.h>
 #include <linux/fb.h>
