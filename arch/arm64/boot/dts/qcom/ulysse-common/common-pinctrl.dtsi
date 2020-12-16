@@ -166,6 +166,7 @@
                     bias-pull-up;
                 };
             };
+        };
 
             bq_int_default: bq_int_default {
                 mux {
@@ -178,7 +179,6 @@
                     bias-pull-up;           /* PULL UP*/
                 };
             };
-        };
 
         usb-id-pin {
             usbid_default: cd-on{
