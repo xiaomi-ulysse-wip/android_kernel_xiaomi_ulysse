@@ -1,0 +1,38 @@
+/* Free GPIO 62 for bq27426 fuelgauge.*/
+
+&cci {
+    qcom,eeprom@0 {
+		pinctrl-0 = <&cam_sensor_mclk0_default
+				&cam_sensor_rear_reset
+				&cam_sensor_rear_standby>;
+		pinctrl-1 = <&cam_sensor_mclk0_sleep
+				&cam_sensor_rear_reset_sleep
+				&cam_sensor_rear_standby_sleep>;
+		gpios = <&tlmm 26 0>,
+			<&tlmm 36 0>,
+			<&tlmm 35 0>;
+		/delete-property/ qcom,gpio-vdig;
+		qcom,gpio-req-tbl-num = <0 1 2>;
+		qcom,gpio-req-tbl-flags = <1 0 0>;
+		qcom,gpio-req-tbl-label = "CAMIF_MCLK0",
+			"CAM_RESET0",
+			"CAM_STANDBY0";
+    };
+	qcom,camera@0 {
+		pinctrl-0 = <&cam_sensor_mclk0_default
+				&cam_sensor_rear_reset
+				&cam_sensor_rear_standby>;
+		pinctrl-1 = <&cam_sensor_mclk0_sleep
+				&cam_sensor_rear_reset_sleep
+				&cam_sensor_rear_standby_sleep>;
+		gpios = <&tlmm 26 0>,
+			<&tlmm 36 0>,
+			<&tlmm 35 0>;
+		/delete-property/ qcom,gpio-vdig;
+		qcom,gpio-req-tbl-num = <0 1 2>;
+		qcom,gpio-req-tbl-flags = <1 0 0>;
+		qcom,gpio-req-tbl-label = "CAMIF_MCLK0",
+			"CAM_RESET0",
+			"CAM_STANDBY0";
+    };
+};

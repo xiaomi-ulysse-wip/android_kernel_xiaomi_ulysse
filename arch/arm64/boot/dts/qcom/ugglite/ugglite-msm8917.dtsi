@@ -13,4 +13,5 @@
  */
 
 #include "ugglite-camera.dtsi"
+#include "ugglite-camera-gpio62.dtsi"
 
