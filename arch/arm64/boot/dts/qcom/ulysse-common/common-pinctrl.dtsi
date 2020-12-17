@@ -323,3 +323,9 @@
 		pins = "gpio91", "gpio127";
 	};
 };
+
+/* Free GPIO 62 for bq27426 fuelgauge.*/
+&tlmm {
+	/delete-node/ cam_sensor_rear_vdig;
+	/delete-node/ cam_sensor_rear_vdig_sleep;
+};
