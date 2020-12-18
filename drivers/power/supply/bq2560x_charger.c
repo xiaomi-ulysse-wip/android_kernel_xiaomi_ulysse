@@ -894,7 +894,6 @@ static enum power_supply_property bq2560x_charger_props[] = {
 
 	POWER_SUPPLY_PROP_SYSTEM_TEMP_LEVEL,
 	POWER_SUPPLY_PROP_TECHNOLOGY,
-	POWER_SUPPLY_PROP_RESISTANCE_ID,
 };
 
 static int bq2560x_charger_get_property(struct power_supply *psy,
