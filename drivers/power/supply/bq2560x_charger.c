@@ -908,26 +908,33 @@ static int bq2560x_charger_get_property(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_CHARGE_TYPE:
 		val->intval = bq2560x_get_prop_charge_type(bq);
 		pr_debug("POWER_SUPPLY_PROP_CHARGE_TYPE:%d\n", val->intval);
+		pr_err("GET POWER_SUPPLY_PROP_CHARGE_TYPE:");
 		break;
 	case POWER_SUPPLY_PROP_CHARGING_ENABLED:
 		val->intval = bq->charge_enabled;
+		pr_err("GET POWER_SUPPLY_PROP_CHARGING_ENABLED:");
 		break;
 	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
 		val->intval = 3080;
+		pr_err("GET POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:");
 		break;
 
 	case POWER_SUPPLY_PROP_STATUS:
 		val->intval = bq2560x_get_prop_charge_status(bq);
+		pr_err("GET POWER_SUPPLY_PROP_STATUS:");
 		break;
 	case POWER_SUPPLY_PROP_HEALTH:
 		val->intval = bq2560x_get_prop_health(bq);
+		pr_err("GET POWER_SUPPLY_PROP_HEALTH:");
 		break;
 	case POWER_SUPPLY_PROP_CAPACITY:
 		bq2560x_get_batt_property(bq, psp, val);
+		pr_err("GET POWER_SUPPLY_PROP_CAPACITY:");
 
 		break;
 	case POWER_SUPPLY_PROP_SYSTEM_TEMP_LEVEL:
 		val->intval = bq->therm_lvl_sel;
+		pr_err("GET POWER_SUPPLY_PROP_SYSTEM_TEMP_LEVEL:");
 		break;
 	case POWER_SUPPLY_PROP_PRESENT:
 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
@@ -937,11 +944,14 @@ static int bq2560x_charger_get_property(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_CHARGE_FULL:
 	case POWER_SUPPLY_PROP_TECHNOLOGY:
 	case POWER_SUPPLY_PROP_RESISTANCE_ID:
+		pr_err("GET POWER_SUPPLY_PROP_RESISTANCE_ID:");
 		return bq2560x_get_batt_property(bq, psp, val);
 	default:
+		pr_err("GET INVALID");
 		return -EINVAL;
 
 	}
+	pr_err("INTVAL=%d",val->intval);
 
 	return 0;
 }
