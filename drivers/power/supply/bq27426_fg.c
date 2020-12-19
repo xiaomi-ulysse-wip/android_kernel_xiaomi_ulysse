@@ -1059,17 +1059,22 @@ static int fg_get_batt_status(struct bq_fg_chip *bq)
 
 	fg_read_status(bq);
 
-	if (!bq->batt_present)
+	if (!bq->batt_present) {
+		pr_err("FUCK, fg_get_batt_status returned POWER_SUPPLY_STATUS_UNKNOWN");
 		return POWER_SUPPLY_STATUS_UNKNOWN;
-	else if (bq->batt_fc)
+	} else if (bq->batt_fc) {
+		pr_err("FUCK, fg_get_batt_status returned POWER_SUPPLY_STATUS_FULL");
 		return POWER_SUPPLY_STATUS_FULL;
-	else if (bq->batt_dsg)
+	} else if (bq->batt_dsg) {
+		pr_err("FUCK, fg_get_batt_status returned POWER_SUPPLY_STATUS_DISCHARGING");
 		return POWER_SUPPLY_STATUS_DISCHARGING;
-	else if (bq->batt_curr > 0)
+	} else if (bq->batt_curr > 0) {
+		pr_err("FUCK, fg_get_batt_status returned POWER_SUPPLY_STATUS_CHARGING, batt_curr=%d",bq->batt_curr);
 		return POWER_SUPPLY_STATUS_CHARGING;
-	else
+	} else {
+		pr_err("FUCK, fg_get_batt_status returned POWER_SUPPLY_STATUS_NOT_CHARGING");
 		return POWER_SUPPLY_STATUS_NOT_CHARGING;
-
+	}
 }
 
 
