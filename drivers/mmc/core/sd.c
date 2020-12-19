@@ -4,6 +4,7 @@
  *  Copyright (C) 2003-2004 Russell King, All Rights Reserved.
  *  SD support Copyright (C) 2004 Ian Molton, All Rights Reserved.
  *  Copyright (C) 2005-2007 Pierre Ossman, All Rights Reserved.
+ *  Copyright (C) 2018 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -1300,6 +1301,13 @@ static int mmc_sd_suspend(struct mmc_host *host)
 	/* if suspend fails, force mmc_detect_change during resume */
 	} else if (mmc_bus_manual_resume(host))
 		host->ignore_bus_resume_flags = true;
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+	else {
+		pr_debug("%s: err:%d, we enable rescan to detect sdcard immediately\n", __func__, err);
+		host->rescan_disable = 0;
+		mmc_detect_change(host, 0);
+	}
+#endif
 
 	MMC_TRACE(host, "%s: Exit err: %d\n", __func__, err);
 
@@ -1315,6 +1323,9 @@ static int _mmc_sd_resume(struct mmc_host *host)
 	int err = 0;
 #ifdef CONFIG_MMC_PARANOID_SD_INIT
 	int retries;
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+	int delaytime;
+#endif
 #endif
 
 	BUG_ON(!host);
@@ -1334,6 +1345,9 @@ static int _mmc_sd_resume(struct mmc_host *host)
 	mmc_power_up(host, host->card->ocr);
 #ifdef CONFIG_MMC_PARANOID_SD_INIT
 	retries = 5;
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+	delaytime = 5;
+#endif
 	while (retries) {
 		err = mmc_sd_init_card(host, host->card->ocr, host->card);
 
@@ -1342,9 +1356,16 @@ static int _mmc_sd_resume(struct mmc_host *host)
 			       mmc_hostname(host), err, retries);
 			retries--;
 			mmc_power_off(host);
+#ifndef CONFIG_MACH_XIAOMI_ULYSSE
 			usleep_range(5000, 5500);
+#else
+			usleep_range(delaytime*1000, (delaytime*1000 + 500));
+#endif
 			mmc_power_up(host, host->card->ocr);
 			mmc_select_voltage(host, host->card->ocr);
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+			delaytime *= 2;
+#endif
 			continue;
 		}
 		break;
@@ -1398,6 +1419,14 @@ static int mmc_sd_resume(struct mmc_host *host)
 		pm_runtime_mark_last_busy(&host->card->dev);
 		pm_runtime_enable(&host->card->dev);
 	}
+
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+	if(err) {
+		pr_debug("%s: err:%d, we enable rescan to detect sdcard immediately\n", __func__, err);
+		host->rescan_disable = 0;
+		mmc_detect_change(host, 0);
+	}
+#endif
 
 	MMC_TRACE(host, "%s: Exit err: %d\n", __func__, err);
 	return err;
@@ -1468,6 +1497,9 @@ int mmc_attach_sd(struct mmc_host *host)
 	u32 ocr, rocr;
 #ifdef CONFIG_MMC_PARANOID_SD_INIT
 	int retries;
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+	int delaytime;
+#endif
 #endif
 
 	BUG_ON(!host);
@@ -1513,14 +1545,24 @@ int mmc_attach_sd(struct mmc_host *host)
 	 */
 #ifdef CONFIG_MMC_PARANOID_SD_INIT
 	retries = 5;
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+	delaytime = 5;
+#endif
 	while (retries) {
 		err = mmc_sd_init_card(host, rocr, NULL);
 		if (err) {
 			retries--;
 			mmc_power_off(host);
+#ifndef CONFIG_MACH_XIAOMI_ULYSSE
 			usleep_range(5000, 5500);
+#else
+			usleep_range(delaytime*1000, (delaytime*1000 + 500));
+#endif
 			mmc_power_up(host, rocr);
 			mmc_select_voltage(host, rocr);
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+			delaytime *= 2;
+#endif
 			continue;
 		}
 		break;
