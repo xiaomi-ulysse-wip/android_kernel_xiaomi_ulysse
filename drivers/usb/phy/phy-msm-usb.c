@@ -1,4 +1,5 @@
 /* Copyright (c) 2009-2019, Linux Foundation. All rights reserved.
+ * Copyright (C) 2018 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -264,7 +265,11 @@ module_param(lpm_disconnect_thresh, uint, 0644);
 MODULE_PARM_DESC(lpm_disconnect_thresh,
 	"Delay before entering LPM on USB disconnect");
 
+#ifndef CONFIG_MACH_XIAOMI_ULYSSE
 static bool floated_charger_enable;
+#else
+static bool floated_charger_enable = 1;
+#endif
 module_param(floated_charger_enable, bool, 0644);
 MODULE_PARM_DESC(floated_charger_enable,
 	"Whether to enable floated charger");
@@ -1840,6 +1845,9 @@ skip_phy_resume:
 		usb_hcd_resume_root_hub(hcd);
 		schedule_delayed_work(&motg->perf_vote_work,
 			msecs_to_jiffies(1000 * PM_QOS_SAMPLE_SEC));
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+		msm_id_status_w(&motg->id_status_work.work);
+#endif
 	}
 
 	dev_info(phy->dev, "USB exited from low power mode\n");
@@ -2614,6 +2622,9 @@ static void msm_chg_detect_work(struct work_struct *w)
 				motg->chg_type = USB_SDP_CHARGER;
 
 			motg->chg_state = USB_CHG_STATE_DETECTED;
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+			goto state_detected;
+#endif
 		}
 		break;
 	case USB_CHG_STATE_PRIMARY_DONE:
@@ -2632,6 +2643,9 @@ static void msm_chg_detect_work(struct work_struct *w)
 	case USB_CHG_STATE_SECONDARY_DONE:
 		motg->chg_state = USB_CHG_STATE_DETECTED;
 	case USB_CHG_STATE_DETECTED:
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+state_detected:
+#endif
 		if (!motg->vbus_state) {
 			motg->chg_state = USB_CHG_STATE_IN_PROGRESS;
 			break;
@@ -3010,6 +3024,9 @@ static void msm_otg_set_vbus_state(int online)
 		pr_debug("EXTCON: BSV set\n");
 		msm_otg_dbg_log_event(&motg->phy, "EXTCON: BSV SET",
 				motg->inputs, 0);
+#ifdef CONFIG_MACH_XIAOMI_ULYSSE
+        msleep(500);
+#endif
 		if (test_and_set_bit(B_SESS_VLD, &motg->inputs))
 			return;
 	} else {
