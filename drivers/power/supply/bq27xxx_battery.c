@@ -1598,7 +1598,11 @@ int bq27xxx_battery_setup(struct bq27xxx_device_info *di)
 		return -ENOMEM;
 
 	psy_desc->name = di->name;
+#ifndef CONFIG_MACH_XIAOMI_ULYSSE
 	psy_desc->type = POWER_SUPPLY_TYPE_BATTERY;
+#else
+	psy_desc->type = POWER_SUPPLY_TYPE_BMS;
+#endif
 	psy_desc->properties = bq27xxx_chip_data[di->chip].props;
 	psy_desc->num_properties = bq27xxx_chip_data[di->chip].props_size;
 	psy_desc->get_property = bq27xxx_battery_get_property;
