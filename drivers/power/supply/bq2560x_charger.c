@@ -815,14 +815,11 @@ static int bq2560x_get_prop_charge_status(struct bq2560x *bq)
 
 	ret = bq2560x_get_batt_property(bq,
 					POWER_SUPPLY_PROP_STATUS, &batt_prop);
-	if (!ret && batt_prop.intval == POWER_SUPPLY_STATUS_FULL) {
-		pr_info("POWER_SUPPLY_STATUS_FULL");
+	if (!ret && batt_prop.intval == POWER_SUPPLY_STATUS_FULL)
 		return POWER_SUPPLY_STATUS_FULL;
-	}
 
 	ret = bq2560x_read_byte(bq, &status, BQ2560X_REG_08);
 	if (ret) {
-		pr_info("POWER_SUPPLY_STATUS_UNKNOWN");
 		return 	POWER_SUPPLY_STATUS_UNKNOWN;
 	}
 
@@ -833,16 +830,12 @@ static int bq2560x_get_prop_charge_status(struct bq2560x *bq)
 	switch(bq->charge_state) {
 	case CHARGE_STATE_FASTCHG:
 	case CHARGE_STATE_PRECHG:
-		pr_info("POWER_SUPPLY_STATUS_CHARGING");
 		return POWER_SUPPLY_STATUS_CHARGING;
 	case CHARGE_STATE_CHGDONE:
-		pr_info("POWER_SUPPLY_STATUS_NOT_CHARGING");
 		return POWER_SUPPLY_STATUS_NOT_CHARGING;
 	case CHARGE_STATE_IDLE:
-		pr_info("POWER_SUPPLY_STATUS_DISCHARGING");
 		return POWER_SUPPLY_STATUS_DISCHARGING;
 	default:
-		pr_info("POWER_SUPPLY_STATUS_UNKNOWN");
 		return 	POWER_SUPPLY_STATUS_UNKNOWN;
 	}
 
