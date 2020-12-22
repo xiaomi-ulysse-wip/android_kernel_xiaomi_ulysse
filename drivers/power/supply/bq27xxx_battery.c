@@ -1339,8 +1339,10 @@ void bq27xxx_battery_update(struct bq27xxx_device_info *di)
 			cache.power_avg = bq27xxx_battery_read_pwr_avg(di);
 
 		/* We only have to read charge design full once */
+#ifndef CONFIG_MACH_XIAOMI_ULYSSE
 		if (di->charge_design_full <= 0)
 			di->charge_design_full = bq27xxx_battery_read_dcap(di);
+#endif
 	}
 
 	if (di->cache.capacity != cache.capacity)
