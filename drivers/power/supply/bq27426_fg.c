@@ -1059,22 +1059,17 @@ static int fg_get_batt_status(struct bq_fg_chip *bq)
 
 	fg_read_status(bq);
 
-	if (!bq->batt_present) {
-		pr_err("FUCK, fg_get_batt_status returned POWER_SUPPLY_STATUS_UNKNOWN");
+	if (!bq->batt_present)
 		return POWER_SUPPLY_STATUS_UNKNOWN;
-	} else if (bq->batt_fc) {
-		pr_err("FUCK, fg_get_batt_status returned POWER_SUPPLY_STATUS_FULL");
+	else if (bq->batt_fc)
 		return POWER_SUPPLY_STATUS_FULL;
-	} else if (bq->batt_dsg) {
-		pr_err("FUCK, fg_get_batt_status returned POWER_SUPPLY_STATUS_DISCHARGING");
+	else if (bq->batt_dsg)
 		return POWER_SUPPLY_STATUS_DISCHARGING;
-	} else if (bq->batt_curr > 0) {
-		pr_err("FUCK, fg_get_batt_status returned POWER_SUPPLY_STATUS_CHARGING, batt_curr=%d",bq->batt_curr);
+	else if (bq->batt_curr > 0)
 		return POWER_SUPPLY_STATUS_CHARGING;
-	} else {
-		pr_err("FUCK, fg_get_batt_status returned POWER_SUPPLY_STATUS_NOT_CHARGING");
+	else
 		return POWER_SUPPLY_STATUS_NOT_CHARGING;
-	}
+
 }
 
 
@@ -1134,7 +1129,6 @@ static int fg_get_property(struct power_supply *psy, enum power_supply_property 
 	switch (psp) {
 	case POWER_SUPPLY_PROP_STATUS:
 		val->intval = fg_get_batt_status(bq);
-		pr_err("GET POWER_SUPPLY_PROP_STATUS:");
 		break;
 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
 		ret = fg_read_volt(bq);
@@ -1143,11 +1137,10 @@ static int fg_get_property(struct power_supply *psy, enum power_supply_property 
 			bq->batt_volt = ret;
 		val->intval = bq->batt_volt * 1000;
 		mutex_unlock(&bq->data_lock);
-		pr_err("GET POWER_SUPPLY_PROP_VOLTAGE_NOW:");
+
 		break;
 	case POWER_SUPPLY_PROP_PRESENT:
 		val->intval = bq->batt_present;
-		pr_err("GET POWER_SUPPLY_PROP_PRESENT:");
 		break;
 	case POWER_SUPPLY_PROP_CURRENT_NOW:
 		mutex_lock(&bq->data_lock);
@@ -1155,7 +1148,6 @@ static int fg_get_property(struct power_supply *psy, enum power_supply_property 
 		val->intval = -bq->batt_curr * 1000;
 		pr_info("bq27426 current=%d\n", val->intval);
 		mutex_unlock(&bq->data_lock);
-		pr_err("GET POWER_SUPPLY_PROP_CURRENT_NOW:");
 		break;
 
 	case POWER_SUPPLY_PROP_CAPACITY:
@@ -1169,12 +1161,10 @@ static int fg_get_property(struct power_supply *psy, enum power_supply_property 
 			bq->batt_soc = ret;
 		val->intval = bq->batt_soc;
 		mutex_unlock(&bq->data_lock);
-		pr_err("GET POWER_SUPPLY_PROP_CAPACITY:");
 		break;
 
 	case POWER_SUPPLY_PROP_CAPACITY_LEVEL:
 		val->intval = fg_get_batt_capacity_level(bq);
-		pr_err("GET POWER_SUPPLY_PROP_CAPACITY_LEVEL:");
 		break;
 
 	case POWER_SUPPLY_PROP_TEMP:
@@ -1188,7 +1178,6 @@ static int fg_get_property(struct power_supply *psy, enum power_supply_property 
 			bq->batt_temp = ret;
 		val->intval = bq->batt_temp - 2730;
 		mutex_unlock(&bq->data_lock);
-		pr_err("GET POWER_SUPPLY_PROP_TEMP:");
 		break;
 
 	case POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW:
@@ -1199,7 +1188,6 @@ static int fg_get_property(struct power_supply *psy, enum power_supply_property 
 	
 		val->intval = bq->batt_tte;
 		mutex_unlock(&bq->data_lock);
-		pr_err("GET POWER_SUPPLY_PROP_TIME_TO_EMPTY_NOW:");
 		break;
 
 	case POWER_SUPPLY_PROP_CHARGE_FULL:
@@ -1209,7 +1197,6 @@ static int fg_get_property(struct power_supply *psy, enum power_supply_property 
 			bq->batt_fcc = ret;
 		val->intval = bq->batt_fcc * 1000;
 		mutex_unlock(&bq->data_lock);
-		pr_err("GET POWER_SUPPLY_PROP_CHARGE_FULL:");
 		break;
 
 	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
@@ -1219,7 +1206,6 @@ static int fg_get_property(struct power_supply *psy, enum power_supply_property 
 			bq->batt_dc = ret;
 		val->intval = bq->batt_dc * 1000;
 		mutex_unlock(&bq->data_lock);
-		pr_err("GET POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:");
 		break;
 
 	case POWER_SUPPLY_PROP_CYCLE_COUNT:
@@ -1229,31 +1215,25 @@ static int fg_get_property(struct power_supply *psy, enum power_supply_property 
 			bq->batt_cyclecnt = ret;
 		val->intval = bq->batt_cyclecnt;
 		mutex_unlock(&bq->data_lock);
-		pr_err("GET POWER_SUPPLY_PROP_CYCLE_COUNT:");
 		break;
 
 	case POWER_SUPPLY_PROP_HEALTH:
 		val->intval = fg_get_batt_health(bq);
-		pr_err("GET POWER_SUPPLY_PROP_HEALTH:");
 		break;
 
 	case POWER_SUPPLY_PROP_TECHNOLOGY:
 		val->intval = POWER_SUPPLY_TECHNOLOGY_LIPO;
-		pr_err("GET POWER_SUPPLY_PROP_TECHNOLOGY:");
 		break;
 
 	case POWER_SUPPLY_PROP_UPDATE_NOW:
 		val->intval = 0;
-		pr_err("GET POWER_SUPPLY_PROP_UPDATE_NOW:");
 		break;
 
 	default:
 		mutex_unlock(&bq->update_lock);
-		pr_err("GET INVALID");
 		return -EINVAL;
 	}
 	mutex_unlock(&bq->update_lock);
-	pr_err("INTVAL=%d",val->intval);
 	return 0;
 }
 static void fg_dump_registers(struct bq_fg_chip *bq);
@@ -1566,15 +1546,16 @@ EXPORT_SYMBOL_GPL(fg_enable_sleep);
 
 static void fg_dump_registers(struct bq_fg_chip *bq)
 {
-/*
+	int i;
+	int ret;
+	u16 val;
+
 	for (i = 0; i < ARRAY_SIZE(fg_dump_regs); i++) {
 		msleep(5);
 		ret = fg_read_word(bq, fg_dump_regs[i], &val);
 		if (!ret)
 			pr_err("Reg[%02X] = 0x%04X\n", fg_dump_regs[i], val);
 	}
-*/
-	return;
 }
 
 static irqreturn_t fg_irq_thread(int irq, void *dev_id)
