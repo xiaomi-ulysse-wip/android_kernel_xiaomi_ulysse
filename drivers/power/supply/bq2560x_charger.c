@@ -1911,8 +1911,11 @@ static void bq2560x_dump_fg_reg(struct bq2560x *bq)
 	if (++dump_cnt >= (FG_LOG_INTERVAL / calculate_jeita_poll_interval(bq))) {
 		dump_cnt = 0;
 		val.intval = 0;
+/*
 		bq->bms_psy->desc->set_property(bq->bms_psy,
 				POWER_SUPPLY_PROP_UPDATE_NOW, &val);
+*/
+		pr_err("FIXME: set_property NOT implemented in bq27xxx driver!");
 	}
 }
 
