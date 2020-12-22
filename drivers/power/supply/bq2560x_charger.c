@@ -1906,6 +1906,7 @@ static int calculate_jeita_poll_interval(struct bq2560x* bq)
 #define	FG_LOG_INTERVAL		600
 static void bq2560x_dump_fg_reg(struct bq2560x *bq)
 {
+/*
 	union power_supply_propval val = {0,};
 	static int dump_cnt;
 
@@ -1915,6 +1916,7 @@ static void bq2560x_dump_fg_reg(struct bq2560x *bq)
 		bq->bms_psy->desc->set_property(bq->bms_psy,
 				POWER_SUPPLY_PROP_UPDATE_NOW, &val);
 	}
+*/
 }
 
 static enum alarmtimer_restart bq2560x_jeita_alarm_cb(struct alarm *alarm,
@@ -1975,9 +1977,7 @@ static const unsigned char* charge_stat_str[] = {
 static void bq2560x_dump_status(struct bq2560x* bq)
 {
 	u8 status;
-	u8 addr;
 	int ret;
-	u8 val;
 	union power_supply_propval batt_prop = {0,};
 
 	ret = bq2560x_get_batt_property(bq,
@@ -1985,7 +1985,7 @@ static void bq2560x_dump_status(struct bq2560x* bq)
 
 	if (!ret)
 			pr_debug("FG current:%d\n", batt_prop.intval);
-
+/*
 	for (addr = 0x0; addr <= 0x0B; addr++) {
 		ret = bq2560x_read_byte(bq, &val, addr);
 		if (!ret)
@@ -1993,6 +1993,7 @@ static void bq2560x_dump_status(struct bq2560x* bq)
 		else
 			pr_err("bq Reg red err\n");
 	}
+*/
 	if (!bq->power_good)
 		pr_info("Power Poor\n");
 	if (!bq->vbus_good)
