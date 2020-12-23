@@ -13,7 +13,6 @@
  */
 
 &soc {
-	
 	gpio_keys {
 		/delete-node/ camera_focus;
 		/delete-node/ camera_snapshot;
@@ -40,11 +39,7 @@
 		reg-id = "vdd";
 		vdd-supply = <&pm8937_l10>;
 	};
-
-
 };
-
-
 
 &i2c_5 {
 	awinic@45 { /* Breath Light-Driven */
@@ -72,17 +67,5 @@
 			aw2013,fall-time-ms = <2>;
 			aw2013,off-time-ms = <1>;
 		};
-
-
 	};
-};
-	
-&usb_otg{
-	interrupts = <0 134 0>,<0 140 0>,<0 136 0>;
-	interrupt-names = "core_irq", "async_irq","phy_irq";
-
-	qcom,hsusb-otg-mode = <3>;
-	vbus_otg-supply = <&bq2560x_otg_supply>;
-	qcom,hsusb-otg-phy-init-seq =
-	<0x38 0x81 0xffffffff>;
 };

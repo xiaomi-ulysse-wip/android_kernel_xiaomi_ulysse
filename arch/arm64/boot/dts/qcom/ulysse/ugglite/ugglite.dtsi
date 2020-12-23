@@ -12,6 +12,6 @@
  * GNU General Public License for more details.
  */
 
-#include "ugglite-camera.dtsi"
-#include "ugglite-camera-gpio62.dtsi"
+#include "camera.dtsi"
+#include "camera-gpio62.dtsi"
 
