@@ -1,0 +1,10 @@
+#include "pinctrl.dtsi"
+
+#include "audio.dtsi"
+#include "camera.dtsi"
+#include "fingerprint.dtsi"
+#include "misc.dtsi"
+#include "pm.dtsi"
+#include "sdhc.dtsi"
+#include "soc.dtsi"
+#include "touchscreen.dtsi"

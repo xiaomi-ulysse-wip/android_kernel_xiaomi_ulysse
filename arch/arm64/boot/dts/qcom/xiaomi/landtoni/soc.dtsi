@@ -1,0 +1,20 @@
+/ {
+	reserved-memory {
+		pstore_reserve_mem: pstore_reserve_mem_region@0 {
+			compatible = "removed-dma-pool";
+			no-map;
+			reg = <0x0 0x9ff00000 0x0 0x00300000>;
+		};
+	};
+};
+
+&thermal_zones {
+	/delete-node/ pa-therm1-adc;
+};
+
+&soc {
+	i2c@78b7000 {
+		qcom,clk-freq-out = <100000>;
+		status = "okay";
+	};
+};

@@ -1,0 +1,8 @@
+#include "audio.dtsi"
+#include "battery.dtsi"
+#include "camera.dtsi"
+#include "display.dtsi"
+#include "misc.dtsi"
+#include "pm.dtsi"
+#include "sdhc.dtsi"
+#include "touchscreen.dtsi"
