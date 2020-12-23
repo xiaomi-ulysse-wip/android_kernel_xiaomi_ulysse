@@ -12,16 +12,6 @@
  * GNU General Public License for more details.
  */
 
-/{
-    mtp_batterydata: qcom,battery-data {
-            qcom,batt-id-range-pct = <15>;
-            #include "battery/batterydata-coslight-3300mah-4400mv.dtsi"
-            #include "battery/batterydata-guangyu-4v4-5000mah.dtsi"
-            #include "battery/batterydata-sscud-4v4-5000mah.dtsi"
-            #include "battery/batterydata-sunwoda-3300mah-4400mv.dtsi"
-    };
-};
-
 &i2c_2 {
 	status = "ok";
 	bq27426@55 {
