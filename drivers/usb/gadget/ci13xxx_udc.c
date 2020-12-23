@@ -3754,9 +3754,7 @@ static irqreturn_t udc_irq(void)
 			isr_tr_complete_handler(udc);
 		}
 		if (USBi_SLI & intr) {
-#ifndef CONFIG_MACH_XIAOMI_ULYSSE
 			isr_suspend_handler(udc);
-#endif
 			isr_statistics.sli++;
 		}
 		retval = IRQ_HANDLED;
