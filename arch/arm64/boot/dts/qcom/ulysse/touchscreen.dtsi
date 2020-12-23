@@ -12,10 +12,7 @@
  * GNU General Public License for more details.
  */
 
-
-
-&soc {
-    i2c_3: i2c@78b7000 { /* BLSP1 QUP3 */
+&i2c_3 {
         status = "ok";
     
         goodix@5d{
@@ -107,5 +104,4 @@
             focaltech,key-y-coord = <1350>;
             focaltech,key-x-coords = <180 350 540>;
         };
-    };
 };

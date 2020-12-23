@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
  * Copyright (C) 2018 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -12,9 +12,20 @@
  * GNU General Public License for more details.
  */
 
+&usb_otg{
+	interrupts = <0 134 0>,<0 140 0>,<0 136 0>;
+	interrupt-names = "core_irq", "async_irq","phy_irq";
 
-#include "ugg-camera.dtsi"
-#include "ugg-camera-gpio62.dtsi"
-#include "ugg-fingerprint.dtsi"
-#include "ugg-pinctrl.dtsi"
+	qcom,hsusb-otg-mode = <3>;
+	vbus_otg-supply = <&bq2560x_otg_supply>;
+	qcom,hsusb-otg-phy-init-seq =
+	<0x38 0x81 0xffffffff>;
+};
 
+&bq2560x_otg_supply {
+	dpdm-supply = <&usb_otg>;
+};
+
+&usb_otg {
+	extcon = <&bq2560x_otg_supply>;
+};
