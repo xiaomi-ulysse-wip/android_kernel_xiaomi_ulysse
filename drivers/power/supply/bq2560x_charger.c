@@ -2,6 +2,7 @@
  * BQ2560x battery charging driver
  *
  * Copyright (C) 2013 Texas Instruments
+ * Copyright (C) 2018 XiaoMi, Inc.
  *
  * This package is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -1700,8 +1701,13 @@ static void bq2560x_init_jeita(struct bq2560x *bq)
 	bq->hot_temp_hysteresis = 50;
 	bq->cold_temp_hysteresis = 50;
 
+#ifndef CONFIG_MACH_XIAOMI_ULYSSE
 	bq->batt_cold_cool_ma = 300;
 	bq->batt_cool_normal_ma = 600;
+#else
+	bq->batt_cold_cool_ma = 400;
+	bq->batt_cool_normal_ma = 400;
+#endif
 	bq->batt_cool_mv = 4100;
 	bq->batt_warm_ma = 400;
 	bq->batt_warm_mv = 4100;
