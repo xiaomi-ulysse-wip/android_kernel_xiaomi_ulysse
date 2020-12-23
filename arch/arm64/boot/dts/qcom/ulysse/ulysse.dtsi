@@ -22,6 +22,7 @@
 #include "display.dtsi"
 #include "misc.dtsi"
 #include "pm.dtsi"
+#include "sdhc.dtsi"
 #include "soc.dtsi"
 #include "touchscreen.dtsi"
 #include "usb.dtsi"
