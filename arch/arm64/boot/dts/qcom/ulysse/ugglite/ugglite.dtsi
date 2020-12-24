@@ -13,5 +13,3 @@
  */
 
 #include "camera.dtsi"
-#include "camera-gpio62.dtsi"
-
